@@ -9,48 +9,93 @@
     android:id="@+id/itemList"
     android:paddingHorizontal="0dp"
     android:background="@drawable/gradient_menu_background">
-
-    <LinearLayout
-        android:id="@+id/layoutHeader"
+    
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBar"
         android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"
-        android:background="@drawable/gradient_menu_background"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="10dp"
-        app:layout_constraintBaseline_toTopOf="parent">
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-        <ImageView
-            android:id="@+id/sideMenu"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:contentDescription="@string/app_name"
-            android:src="@drawable/ic_baseline_menu_24"
-            app:tint="@color/black">
-        </ImageView>
-
-        <TextView
-            android:layout_width="0dp"
+        <androidx.appcompat.widget.Toolbar
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/app_name"
-            android:textColor="@color/black"
-            android:textSize="16sp"
-            android:textStyle="bold"/>
+            android:id="@+id/toolbar"
+            android:background="@drawable/gradient_menu_background"
+            android:minHeight="?attr/actionBarSize">
 
-        <ImageView
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:id="@+id/con_search"
-            android:contentDescription="@string/app_name"
-            android:src="@drawable/ic_baseline_search_24"
-            app:showAsAction="ifRoom|collapseActionView"
-            app:actionViewClass="androidx.appcompat.widget.SearchView"
-            app:tint="@color/black" />
-    </LinearLayout>
+            <ImageView
+                android:id="@+id/sideMenu"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_baseline_menu_24"
+                app:tint="@color/black"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/app_name"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
+
+
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+
+
+
+
+
+<!--    <LinearLayout-->
+<!--        android:id="@+id/layoutHeader"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="?actionBarSize"-->
+<!--        android:background="@drawable/gradient_menu_background"-->
+<!--        android:gravity="center_vertical"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:padding="10dp"-->
+<!--        app:layout_constraintBaseline_toTopOf="parent">-->
+
+<!--        <ImageView-->
+<!--            android:id="@+id/sideMenu"-->
+<!--            android:layout_width="28dp"-->
+<!--            android:layout_height="28dp"-->
+<!--            android:contentDescription="@string/app_name"-->
+<!--            android:src="@drawable/ic_baseline_menu_24"-->
+<!--            app:tint="@color/black">-->
+<!--        </ImageView>-->
+
+<!--        <TextView-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginStart="10dp"-->
+<!--            android:layout_marginEnd="10dp"-->
+<!--            android:layout_weight="1"-->
+<!--            android:gravity="center"-->
+<!--            android:text="@string/app_name"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:textSize="16sp"-->
+<!--            android:textStyle="bold"/>-->
+
+<!--        <SearchView-->
+<!--            android:id="@+id/con_search"-->
+<!--            android:layout_width="28dp"-->
+<!--            android:layout_height="28dp"-->
+<!--            android:contentDescription="@string/app_name"-->
+<!--            android:src="@drawable/ic_baseline_search_24"-->
+<!--            app:actionViewClass="androidx.appcompat.widget.SearchView"-->
+<!--            app:showAsAction="ifRoom|collapseActionView"-->
+<!--            app:tint="@color/black" />-->
+<!--    </LinearLayout>-->
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/idRVContact"
@@ -62,7 +107,7 @@
         tools:listitem="@layout/list_item"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="@id/itemList"
-        app:layout_constraintTop_toBottomOf="@id/layoutHeader"
+        app:layout_constraintTop_toBottomOf="@id/appBar"
         tools:ignore="MissingConstraints"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

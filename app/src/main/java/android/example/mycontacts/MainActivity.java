@@ -1,8 +1,10 @@
 package android.example.mycontacts;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.MenuItemCompat;
@@ -12,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.SearchManager;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -39,25 +42,21 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
 
-
-
-    private Cursor cursor;
-    private Context context;
-    private ConstraintLayout itemList;
     private ImageView empty_imageView;
     private TextView no_contactsText;
     private ArrayList<User> userArrayList;
     private RecyclerView recyclerView;
     private ListAdapter adapter;
     private FloatingActionButton addNewContactFAB;
+    private SearchView searchView;
     public final static int REQ_CODE_CHILD = 1;
 
-
-    protected void onActivityResult (int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQ_CODE_CHILD) {
             if (data != null) {
@@ -68,12 +67,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void visibility () {
+    private void visibility() {
         if (userArrayList.isEmpty()) {
             empty_imageView.setVisibility(View.VISIBLE);
             no_contactsText.setVisibility(View.VISIBLE);
-        }
-        else {
+        } else {
             empty_imageView.setVisibility(View.GONE);
             no_contactsText.setVisibility(View.GONE);
         }
@@ -84,13 +82,15 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(myToolbar);
+
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.gradient_menu_background));
-
         }
 
-        itemList = findViewById(R.id.itemList);
+        searchView = findViewById(R.id.con_search);
         recyclerView = findViewById(R.id.idRVContact);
         addNewContactFAB = findViewById(R.id.idFABadd);
         empty_imageView = findViewById(R.id.empty_imageview);
@@ -98,26 +98,14 @@ public class MainActivity extends AppCompatActivity {
         userArrayList = new ArrayList<>();
         prepare();
 
-
-
         addNewContactFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent child = new Intent(MainActivity.this, CreateNewContactActivity.class);
-//                Intent child = new Intent(getPackageName(), Uri.parse("android.example.mycontacts.CreateNewContactActivity"));
                 startActivityForResult(child, REQ_CODE_CHILD);
-
-//                Intent i = new Intent(MainActivity.this, CreateNewContactActivity.class);
-//                startActivity(i);
             }
         });
-
-//        customAdapter = new CustomAdapter(MainActivity.this, contact_name, contact_last_name, contact_number, contact_date, contact_info);
-//        recyclerView.setAdapter(customAdapter);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(MainActivity.this));
-
     }
-
 
     private void prepare() {
         adapter = new ListAdapter(this, userArrayList);
@@ -128,15 +116,14 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.con_menu, menu);
-        MenuItem searchViewItem = menu.findItem(R.id.con_search);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchViewItem);
+        getMenuInflater().inflate(R.menu.con_menu, menu);
+        MenuItem searchItem = menu.findItem(R.id.con_search);
+        searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
             @Override
             public boolean onQueryTextSubmit(String query) {
-
                 searchView.clearFocus();
                 return false;
             }
@@ -147,20 +134,16 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
         return super.onCreateOptionsMenu(menu);
     }
-
     private void filter(String text) {
-
         ArrayList<User> filteredlist = new ArrayList<>();
-
         for (User item : userArrayList) {
             if (item.getName().toLowerCase().contains(text.toLowerCase())) {
-
                 filteredlist.add(item);
             }
         }
-
         if (filteredlist.isEmpty()) {
             Toast.makeText(this, "No Contact Found", Toast.LENGTH_SHORT).show();
         } else {
