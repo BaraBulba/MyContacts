@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">MyContacts</string>
+    <string name="menu_search">Поиск</string>
+    <string name="menu_name">Поиск</string>
+    <string name="menu_date">Поиск</string>
+    <string name="menu_number">Поиск</string>
+</resources>
