@@ -6,8 +6,7 @@
     android:backgroundTint="@android:color/darker_gray"
     android:orientation="vertical"
     tools:context="CreateNewContactActivity"
-    android:id="@+id/New_con_lay"
-    >
+    android:id="@+id/New_con_lay">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -16,8 +15,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@drawable/gradient_menu_background">
+            android:background="@drawable/gradient_menu_background"
+            android:orientation="vertical">
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/PreviewImage"

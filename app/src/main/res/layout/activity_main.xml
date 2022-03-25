@@ -50,31 +50,20 @@
             app:showAsAction="ifRoom|collapseActionView"
             app:actionViewClass="androidx.appcompat.widget.SearchView"
             app:tint="@color/black" />
-
-
     </LinearLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/menuRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:clipToPadding="false"
-        android:orientation="vertical"
-        android:padding="5dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layoutHeader"
-        tools:ignore="MissingConstraints" />
-
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/idRVContact"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
         android:divider="@color/white"
-        android:dividerHeight="10dp"
+        android:orientation="vertical"
         tools:listitem="@layout/list_item"
-        app:layout_constraintBottom_toTopOf="@id/layoutHeader"/>
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="@id/itemList"
+        app:layout_constraintTop_toBottomOf="@id/layoutHeader"
+        tools:ignore="MissingConstraints"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/idFABadd"
