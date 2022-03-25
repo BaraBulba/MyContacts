@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
             actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.gradient_menu_background));
         }
 
-//        searchView = findViewById(R.id.con_search);
+        searchView = findViewById(R.id.con_search);
         recyclerView = findViewById(R.id.idRVContact);
         addNewContactFAB = findViewById(R.id.idFABadd);
         empty_imageView = findViewById(R.id.empty_imageview);
@@ -114,41 +114,41 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.con_menu, menu);
-//        MenuItem searchItem = menu.findItem(R.id.con_search);
-//        searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-//
-//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                searchView.clearFocus();
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//                filter(newText.toLowerCase());
-//                return false;
-//            }
-//        });
-//
-//        return super.onCreateOptionsMenu(menu);
-//    }
-//    private void filter(String text) {
-//        ArrayList<User> filteredlist = new ArrayList<>();
-//        for (User item : userArrayList) {
-//            if (item.getName().toLowerCase().contains(text.toLowerCase())) {
-//                filteredlist.add(item);
-//            }
-//        }
-//        if (filteredlist.isEmpty()) {
-//            Toast.makeText(this, "No Contact Found", Toast.LENGTH_SHORT).show();
-//        } else {
-//            adapter.filterList(filteredlist);
-//        }
-//    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.con_menu, menu);
+        MenuItem searchItem = menu.findItem(R.id.con_search);
+        searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                searchView.clearFocus();
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                filter(newText.toLowerCase());
+                return false;
+            }
+        });
+
+        return super.onCreateOptionsMenu(menu);
+    }
+    private void filter(String text) {
+        ArrayList<User> filteredlist = new ArrayList<>();
+        for (User item : userArrayList) {
+            if ((item.getName() + item.getLastname()).toLowerCase().contains(text.toLowerCase())) {
+                filteredlist.add(item);
+            }
+        }
+        if (filteredlist.isEmpty()) {
+            Toast.makeText(this, "No Contact Found", Toast.LENGTH_SHORT).show();
+        } else {
+            adapter.filterList(filteredlist);
+        }
+    }
 
 }
