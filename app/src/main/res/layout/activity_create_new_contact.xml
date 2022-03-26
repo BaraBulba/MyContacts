@@ -70,7 +70,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
                 android:hint="Number"
-                android:inputType="text" />
+                android:inputType="phone" />
 
             <EditText
                 android:id="@+id/idEdtDate"
@@ -81,7 +81,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginBottom="8dp"
                 android:hint="Date of Birth"
-                android:inputType="text"
+                android:inputType="date"
                 android:textSize="20dp" />
 
             <EditText

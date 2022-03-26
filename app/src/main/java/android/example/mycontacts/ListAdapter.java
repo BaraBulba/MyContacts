@@ -29,34 +29,6 @@ class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
 
     }
 
-//    @Override
-//    public View getView(int position, View convertView, ViewGroup parent) {
-//
-//        User user = getItem(position);
-//
-//        if (convertView == null) {
-//
-//            convertView = LayoutInflater.from(getContext()).inflate(R.layout.list_item, parent, false);
-//        }
-//
-//        ImageView imageView = convertView.findViewById(R.id.idCIVAvatar);
-//        TextView username = convertView.findViewById(R.id.PersonName);
-//        TextView lastname = convertView.findViewById(R.id.LastName);
-//        TextView shortinfo = convertView.findViewById(R.id.idTVShortInfo);
-//        TextView number = convertView.findViewById(R.id.idTVNumber);
-//
-//
-//
-//        imageView.setImageResource(user.avatar);
-//        username.setText(user.name);
-//        lastname.setText(user.lastname);
-//        shortinfo.setText(user.short_info);
-//        number.setText(user.number);
-//
-//
-//        return convertView;
-//    }
-
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

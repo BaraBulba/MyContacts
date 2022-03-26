@@ -19,11 +19,6 @@ import java.nio.ByteBuffer;
 public class UserActivity extends AppCompatActivity {
 
     ActivityUserBinding binding;
-//     private String name, lastname, number, date, info;
-//     private TextView nameTV, lastnameTv, numberTv, dateTv, infoTv;
-//     private int avatarBig;
-
-
 
          @Override
     protected void onCreate (Bundle savedInstanceState){
@@ -50,12 +45,6 @@ public class UserActivity extends AppCompatActivity {
             binding.infoProfile.setText(shortinfo);
             Bitmap bmp = BitmapFactory.decodeByteArray(avatarBytes, 0, avatarBytes.length);
             binding.idProfileAvatar.setImageBitmap(Bitmap.createBitmap(bmp));
-//            binding.idProfileAvatar.setImageResource(ByteBuffer.wrap(avatarBytes).getInt());
-
-
-
-
-
 
         }
     }

@@ -54,7 +54,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Name"
-                        android:textSize="16sp" />
+                        android:textSize="16sp"
+                        android:textStyle="italic" />
 
                     <TextView
                         android:id="@+id/name_profile"
@@ -98,6 +99,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:textStyle="italic"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Phone number"
@@ -141,6 +143,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:textStyle="italic"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Date of birth"
@@ -180,6 +183,7 @@
                     android:orientation="vertical">
 
                     <TextView
+                        android:textStyle="italic"
                         android:id="@+id/idShorInfotxt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
