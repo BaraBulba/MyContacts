@@ -14,7 +14,6 @@ import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 public class User {
-    public User(){}
         @PrimaryKey
         long id;
         String name, lastname, date, short_info, number;
