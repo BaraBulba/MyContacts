@@ -5,46 +5,26 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.content.res.ResourcesCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuItemCompat;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.annotation.SuppressLint;
-import android.app.Dialog;
-import android.app.SearchManager;
-import android.content.ClipData;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.database.Cursor;
-import android.example.mycontacts.databinding.ActivityMainBinding;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Adapter;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
-
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-import java.util.List;
+
+import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -106,20 +86,34 @@ public class MainActivity extends AppCompatActivity {
             }
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                User deletedCourse = userArrayList.get(viewHolder.getAbsoluteAdapterPosition());
+                User user = userArrayList.get(viewHolder.getAbsoluteAdapterPosition());
                 int position = viewHolder.getAbsoluteAdapterPosition();
                 userArrayList.remove(viewHolder.getAbsoluteAdapterPosition());
                 adapter.notifyItemRemoved(viewHolder.getAbsoluteAdapterPosition());
-                Snackbar.make(recyclerView, deletedCourse.getName(), Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
+                Snackbar snackbar = Snackbar.make(recyclerView, user.getName() + "       been Removed! ", Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        userArrayList.add(position, deletedCourse);
+                        userArrayList.add(position, user);
                         adapter.notifyItemInserted(position);
                     }
-                }).show();
+                });
+                snackbar.setActionTextColor(Color.BLACK);
+                snackbar.show();
+            }
+
+            @Override
+            public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
+                new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
+                        .addSwipeRightBackgroundColor(ContextCompat.getColor(MainActivity.this, R.color.red))
+                        .addSwipeRightActionIcon(R.drawable.ic_baseline_delete_24)
+                        .create()
+                        .decorate();
+                super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             }
         }).attachToRecyclerView(recyclerView);
         prepare();
+
+
 
         addNewContactFAB.setOnClickListener(new View.OnClickListener() {
             @Override
