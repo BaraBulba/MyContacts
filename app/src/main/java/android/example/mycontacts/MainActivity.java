@@ -23,11 +23,16 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import java.util.ArrayList;
+import java.util.List;
 
+import io.realm.Realm;
+import io.realm.RealmResults;
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
 
 public class MainActivity extends AppCompatActivity {
+
+
 
     private ImageView empty_imageView;
     private TextView no_contactsText;
@@ -36,16 +41,20 @@ public class MainActivity extends AppCompatActivity {
     private ListAdapter adapter;
     private FloatingActionButton addNewContactFAB;
     private SearchView searchView;
+    private Realm realm;
     public final static int REQ_CODE_CHILD = 1;
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQ_CODE_CHILD) {
-            if (data != null) {
-                User myObject = (User) data.getExtras().getSerializable("KEY_GOES_HERE");
-                adapter.refresh(myObject);
-                visibility();
-            }
+//            if (data != null) {
+//                User myObject = (User) data.getExtras().getSerializable("KEY_GOES_HERE");
+//                adapter.refresh(myObject);
+            showData();
+            adapter = new ListAdapter(this, userArrayList);
+            visibility();
+            recyclerView.setAdapter(adapter);
+//            }
         }
     }
 
@@ -71,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setBackgroundDrawable(getResources().getDrawable(R.drawable.gradient_menu_background));
         }
-
+        realm = Realm.getDefaultInstance();
         searchView = findViewById(R.id.con_search);
         recyclerView = findViewById(R.id.idRVContact);
         addNewContactFAB = findViewById(R.id.idFABadd);
@@ -111,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
                 super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
             }
         }).attachToRecyclerView(recyclerView);
+        showData();
         prepare();
 
 
@@ -167,6 +177,17 @@ public class MainActivity extends AppCompatActivity {
         } else {
             adapter.filterList(filteredlist);
         }
+    }
+
+    private void showData() {
+        userArrayList.removeAll(userArrayList);
+        List<UserRealm> realmList = realm.where(UserRealm.class).findAll();
+        for (UserRealm item: realmList) {
+            User user = new User(item.name, item.lastname, item.number, item.date, item.short_info, item.avatar);
+            userArrayList.add(user);
+        }
+
+
     }
 
 }

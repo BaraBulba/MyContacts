@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.view.ContextMenu;
 import android.view.View;
 import android.widget.Button;
@@ -33,6 +34,7 @@ import java.io.InputStream;
 import java.util.Calendar;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.realm.Realm;
 
 public class CreateNewContactActivity extends AppCompatActivity {
 
@@ -43,6 +45,7 @@ public class CreateNewContactActivity extends AppCompatActivity {
     private EditText nameEdt, numberEdt, infoEdt, eText, lastNameEdt;
     private DatePickerDialog picker;
     private Bitmap bitAvatar;
+    private Realm realm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +58,7 @@ public class CreateNewContactActivity extends AppCompatActivity {
 
         }
 
-
+        realm = Realm.getDefaultInstance();
         relativeLayout = findViewById(R.id.New_con_lay);
         addContactEdt = findViewById(R.id.idBtnAddContact);
         previewImage = findViewById(R.id.PreviewImage);
@@ -66,51 +69,45 @@ public class CreateNewContactActivity extends AppCompatActivity {
         infoEdt = findViewById(R.id.idEdtInfo);
         eText = findViewById(R.id.idEdtDate);
         registerForContextMenu(addAvatar);
-    
 
         addContactEdt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-//                ContentValues cv = new ContentValues();
-//                cv.put("avatar", ImageViewToByte(ava));
-
                 byte[] avatar = ImageViewToByte(previewImage);
                 String name = nameEdt.getText().toString();
                 String lastname = lastNameEdt.getText().toString();
+                String number = numberEdt.getText().toString();
                 String date = eText.getText().toString();
                 String info = infoEdt.getText().toString();
-                String number = numberEdt.getText().toString();
 
-                if (name.isEmpty()) {
-                    return;
+                if (TextUtils.isEmpty(name)) {
+                    nameEdt.setError("Please enter Name");
                 }
-                if (lastname.isEmpty()) {
-                    return;
+                else if (TextUtils.isEmpty(lastname)) {
+                    lastNameEdt.setError("Please enter Last Name");
                 }
-                if (date.isEmpty()) {
-                    return;
+                else if (TextUtils.isEmpty(number)) {
+                    numberEdt.setError("Please enter Number");
                 }
-                if (info.isEmpty()) {
-                    return;
+                else if (TextUtils.isEmpty(date)) {
+                    eText.setError("Please enter Date");
                 }
-                if (number.isEmpty()) {
-                    return;
+                else if (TextUtils.isEmpty(info)) {
+                    infoEdt.setError("Please enter Short Info");
                 }
-//                byte [] avatarBytes = ImageViewToByte(avatar);
-
-                User user = new User(name, lastname, date, info, number, avatar);
-                Intent resultIntent = new Intent();
-                resultIntent.putExtra("KEY_GOES_HERE", user);
-                int resultCode = 1;
-                setResult(MainActivity.REQ_CODE_CHILD, resultIntent);
+                else {
+                    addDataToDatabase(name, lastname, number, date, info, avatar);
+                }
+//                User user = new User(name, lastname, date, info, number, avatar);
+//                Intent resultIntent = new Intent();
+//                resultIntent.putExtra("KEY_GOES_HERE", user);
+//                int resultCode = 1;
+//                setResult(MainActivity.REQ_CODE_CHILD, resultIntent);
                 finish();
 
 
             }
         });
-
-
 
         eText.setInputType(InputType.TYPE_NULL);
         eText.setOnClickListener(new View.OnClickListener() {
@@ -140,6 +137,31 @@ public class CreateNewContactActivity extends AppCompatActivity {
         });
     }
 
+    private void addDataToDatabase(String name, String lastName, String number, String date, String shortInfo, byte[] avatar) {
+        UserRealm user = new UserRealm();
+        Number id = realm.where(UserRealm.class).max("id");
+        long nextId;
+        if (id == null) {
+            nextId = 1;
+        } else {
+            nextId = id.intValue() + 1;
+        }
+        user.id = nextId;
+        user.setName(name);
+        user.setLastname(lastName);
+        user.setNumber(number);
+        user.setDate(date);
+        user.setShort_info(shortInfo);
+        user.setAvatar(avatar);
+
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.copyToRealm(user);
+            }
+        });
+    }
+
     private byte [] ImageViewToByte (ImageView avatar) {
         Bitmap bitmap = ((BitmapDrawable)avatar.getDrawable()).getBitmap();
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -148,11 +170,7 @@ public class CreateNewContactActivity extends AppCompatActivity {
         return bytes;
     }
 
-
-
-
     void imageChooser() {
-
         Intent i = new Intent();
         i.setType("image/*");
         i.setAction(Intent.ACTION_GET_CONTENT);
@@ -172,20 +190,6 @@ public class CreateNewContactActivity extends AppCompatActivity {
         }
     }
 
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if(requestCode == 1) {
-//            if (resultCode == Activity.RESULT_OK) {
-//                Toast.makeText(this, "New Contact has been added", Toast.LENGTH_SHORT).show();
-//                Intent i = new Intent(CreateNewContactActivity.this, UserActivity.class);
-//                startActivity(i);
-//            }
-//            if (resultCode == Activity.RESULT_CANCELED) {
-//                Toast.makeText(this,"Can'not add the Contact", Toast.LENGTH_SHORT).show();
-//            }
-//        }
-//    }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
