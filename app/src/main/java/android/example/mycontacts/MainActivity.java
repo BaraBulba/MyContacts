@@ -8,6 +8,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.MenuItemCompat;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -38,6 +39,7 @@ import android.widget.Toast;
 
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.w3c.dom.Text;
 
@@ -96,6 +98,27 @@ public class MainActivity extends AppCompatActivity {
         empty_imageView = findViewById(R.id.empty_imageview);
         no_contactsText = findViewById(R.id.empty_textview);
         userArrayList = new ArrayList<>();
+
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT){
+            @Override
+            public boolean onMove (@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target ) {
+                return false;
+            }
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                User deletedCourse = userArrayList.get(viewHolder.getAbsoluteAdapterPosition());
+                int position = viewHolder.getAbsoluteAdapterPosition();
+                userArrayList.remove(viewHolder.getAbsoluteAdapterPosition());
+                adapter.notifyItemRemoved(viewHolder.getAbsoluteAdapterPosition());
+                Snackbar.make(recyclerView, deletedCourse.getName(), Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        userArrayList.add(position, deletedCourse);
+                        adapter.notifyItemInserted(position);
+                    }
+                }).show();
+            }
+        }).attachToRecyclerView(recyclerView);
         prepare();
 
         addNewContactFAB.setOnClickListener(new View.OnClickListener() {
@@ -105,6 +128,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(child, REQ_CODE_CHILD);
             }
         });
+
+
     }
 
     private void prepare() {
@@ -119,7 +144,6 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.con_menu, menu);
         MenuItem searchItem = menu.findItem(R.id.con_search);
         searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
             @Override

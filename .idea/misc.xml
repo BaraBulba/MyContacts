@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/MyContacts/app/src/main/res/drawable-anydpi/delete.xml" value="0.2725" />
+        <entry key="..\:/Users/Admin/AndroidStudioProjects/MyContacts/app/src/main/res/drawable/delete.xml" value="0.2725" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/MyContacts/app/src/main/res/drawable/gradient_background.xml" value="0.2725" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/MyContacts/app/src/main/res/drawable/gradient_fab_background.xml" value="0.2725" />
         <entry key="..\:/Users/Admin/AndroidStudioProjects/MyContacts/app/src/main/res/drawable/gradient_menu_background.xml" value="0.2725" />
