@@ -109,7 +109,7 @@ public class CreateNewContactActivity extends AppCompatActivity {
             }
         });
 
-        eText.setInputType(InputType.TYPE_NULL);
+        eText.setInputType(InputType.TYPE_DATETIME_VARIATION_DATE);
         eText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,6 +121,7 @@ public class CreateNewContactActivity extends AppCompatActivity {
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                                eText.setInputType(InputType.TYPE_DATETIME_VARIATION_DATE);
                                 eText.setText(dayOfMonth + "." + (monthOfYear + 1) + "." + year);
                                 eText.setHintTextColor(R.drawable.gradient_fab_background);
                             }
@@ -138,26 +139,34 @@ public class CreateNewContactActivity extends AppCompatActivity {
     }
 
     private void addDataToDatabase(String name, String lastName, String number, String date, String shortInfo, byte[] avatar) {
-        UserRealm user = new UserRealm();
-        Number id = realm.where(UserRealm.class).max("id");
+        UserRealmItem userRealmItem = new UserRealmItem();
+        Number id = realm.where(UserRealmItem.class).max("id");
         long nextId;
         if (id == null) {
             nextId = 1;
         } else {
             nextId = id.intValue() + 1;
         }
-        user.id = nextId;
-        user.setName(name);
-        user.setLastname(lastName);
-        user.setNumber(number);
-        user.setDate(date);
-        user.setShort_info(shortInfo);
-        user.setAvatar(avatar);
+//        userRealmItem.setId(nextId);
+//        userRealmItem.setName(name);
+//        userRealmItem.setLastname(lastName);
+//        userRealmItem.setNumber(number);
+//        userRealmItem.setDate(date);
+//        userRealmItem.setShort_info(shortInfo);
+//        userRealmItem.setAvatar(avatar);
 
         realm.executeTransaction(new Realm.Transaction() {
             @Override
             public void execute(Realm realm) {
-                realm.copyToRealm(user);
+                userRealmItem.setId(nextId);
+                userRealmItem.setName(name);
+                userRealmItem.setLastname(lastName);
+                userRealmItem.setNumber(number);
+                userRealmItem.setDate(date);
+                userRealmItem.setShort_info(shortInfo);
+                userRealmItem.setAvatar(avatar);
+
+                realm.copyToRealm(userRealmItem);
             }
         });
     }

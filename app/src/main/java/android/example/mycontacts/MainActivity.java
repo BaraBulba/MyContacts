@@ -29,10 +29,7 @@ import io.realm.Realm;
 import io.realm.RealmResults;
 import it.xabaras.android.recyclerview.swipedecorator.RecyclerViewSwipeDecorator;
 
-
 public class MainActivity extends AppCompatActivity {
-
-
 
     private ImageView empty_imageView;
     private TextView no_contactsText;
@@ -43,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private SearchView searchView;
     private Realm realm;
     public final static int REQ_CODE_CHILD = 1;
+    public boolean isClickable = true;
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -95,21 +93,34 @@ public class MainActivity extends AppCompatActivity {
             }
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                User user = userArrayList.get(viewHolder.getAbsoluteAdapterPosition());
-                int position = viewHolder.getAbsoluteAdapterPosition();
-                userArrayList.remove(viewHolder.getAbsoluteAdapterPosition());
-                adapter.notifyItemRemoved(viewHolder.getAbsoluteAdapterPosition());
+                if (isClickable == false){
+                    return;
+                }
+                isClickable = false;
+                User user = userArrayList.get(viewHolder.getAdapterPosition());
+                int position = viewHolder.getAdapterPosition();
+                System.out.println("Position =" + position);
+                System.out.println("Userarraylist =" + userArrayList);
+                userArrayList.remove(viewHolder.getAdapterPosition());
+                adapter.notifyItemRemoved(viewHolder.getAdapterPosition());
                 Snackbar snackbar = Snackbar.make(recyclerView, user.getName() + "       been Removed! ", Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        isClickable = true;
                         userArrayList.add(position, user);
                         adapter.notifyItemInserted(position);
                     }
                 });
                 snackbar.setActionTextColor(Color.BLACK);
+                snackbar.addCallback(new Snackbar.Callback() {
+                    @Override
+                    public void onDismissed(Snackbar snackbar, int event) {
+                        long id = userArrayList.get(position).getId();
+                        deleteContact(id);
+                    }
+                });
                 snackbar.show();
             }
-
             @Override
             public void onChildDraw(@NonNull Canvas c, @NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {
                 new RecyclerViewSwipeDecorator.Builder(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
@@ -179,15 +190,30 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void deleteContact(long id) {
+        UserRealmItem userItem = realm.where(UserRealmItem.class).equalTo("id", id).findFirst();
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                userItem.deleteFromRealm();
+            }
+        });
+    }
+
     private void showData() {
         userArrayList.removeAll(userArrayList);
-        List<UserRealm> realmList = realm.where(UserRealm.class).findAll();
-        for (UserRealm item: realmList) {
-            User user = new User(item.name, item.lastname, item.number, item.date, item.short_info, item.avatar);
+        List<UserRealmItem> realmList = realm.where(UserRealmItem.class).findAll();
+        for (UserRealmItem item: realmList) {
+            User user = new User(item.getId(), item.getName(), item.getLastname(), item.getNumber(), item.getDate(), item.getShort_info(), item.getAvatar());
             userArrayList.add(user);
         }
+    }
 
-
+    private void update() {
+        showData();
+        adapter = new ListAdapter(this, userArrayList);
+        visibility();
+        recyclerView.setAdapter(adapter);
     }
 
 }

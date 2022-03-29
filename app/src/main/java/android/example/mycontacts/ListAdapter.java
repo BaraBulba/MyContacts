@@ -21,6 +21,7 @@ import io.realm.RealmResults;
 
 class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
 
+
     private ArrayList<User> userArrayList;
     private Context context;
 
@@ -32,17 +33,16 @@ class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        return new ViewHolder(LayoutInflater.from(context).inflate(R.layout.list_item, parent, false));
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
+        return new ViewHolder(view);
+//        return new ViewHolder(LayoutInflater.from(context).inflate(R.layout.list_item, parent, false));
     }
-
-
     public void filterList(ArrayList<User> filterllist) {
         userArrayList = filterllist;
         notifyDataSetChanged();
     }
-
     public void refresh (User user) {
         userArrayList.add(user);
         notifyDataSetChanged();
@@ -66,33 +66,30 @@ class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
     }
     
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ListAdapter.ViewHolder holder, int position) {
         User user = userArrayList.get(position);
         Bitmap bmp = BitmapFactory.decodeByteArray(user.getAvatarBytes(), 0, user.getAvatarBytes().length);
         holder.CIVAvatar.setImageBitmap(Bitmap.createBitmap(bmp));
-        holder.name_cont.setText(user.name);
-        holder.lastname_cont.setText(user.lastname);
-        holder.short_info_cont.setText(user.short_info);
-        holder.number_cont.setText(user.number);
-
+        holder.name_cont.setText(user.getName());
+        holder.lastname_cont.setText(user.getLastname());
+        holder.short_info_cont.setText(user.getShort_info());
+        holder.number_cont.setText(user.getNumber());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(context, UserActivity.class);
+                i.putExtra("id", user.getId());
                 i.putExtra("name", user.getName());
                 i.putExtra("lastname", user.getLastname());
                 i.putExtra("date", user.getDate());
                 i.putExtra("number", user.getNumber());
                 i.putExtra("shortinfo", user.getShort_info());
                 i.putExtra("avatar", user.getAvatarBytes());
-
                 context.startActivity(i);
             }
         });
-
     }
-
-
 
     @Override
     public int getItemCount() {
@@ -109,7 +106,6 @@ class ListAdapter extends RecyclerView.Adapter<ListAdapter.ViewHolder> {
 
         public ViewHolder(View itemView) {
             super(itemView);
-
             CIVAvatar = itemView.findViewById(R.id.idCIVAvatar);
             name_cont = itemView.findViewById(R.id.PersonName);
             lastname_cont = itemView.findViewById(R.id.LastName);

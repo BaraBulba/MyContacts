@@ -10,16 +10,19 @@ import android.util.Log;
 import java.io.ByteArrayOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+
+import io.realm.RealmModel;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
 public class User {
-        @PrimaryKey
-        long id;
-        String name, lastname, date, short_info, number;
-        byte [] avatar;
+    @PrimaryKey
+        private long id;
+        private String name, lastname, date, short_info, number;
+        private byte [] avatar;
 
-    public User(String name, String lastname, String number, String date, String short_info, byte [] avatar) {
+    public User(long id,String name, String lastname, String number, String date, String short_info, byte [] avatar) {
+        this.id = id;
         this.name = name;
         this.lastname = lastname;
         this.number = number;
@@ -57,39 +60,19 @@ public class User {
 //        return bitmap;
 //    }
 
-
-
-    public String getName() { return name; }
+    public void setId(long id) { this.id = id; }
     public void setName(String name) { this.name = name; }
-    public String getLastname() { return lastname; }
     public void setLastname(String lastname) { this.lastname = lastname; }
-    public String getDate() { return date; }
-    public void setDate(String date) { this.date = date; }
-    public String getShort_info() { return short_info; }
+    public void setDate(String date) { this.date = date;}
     public void setShort_info(String short_info) { this.short_info = short_info; }
-    public String getNumber() { return number; }
     public void setNumber(String number) { this.number = number; }
-    public byte[] getAvatarBytes() { return avatar; }
     public void setAvatar(byte[] avatar) { this.avatar = avatar; }
-
-
-//    public String getName() {
-//        return name;
-//    }
-//    public String getLastname() {
-//        return lastname;
-//    }
-//    public String getDate() {
-//        return date;
-//    }
-//    public String getShort_info() {
-//        return short_info;
-//    }
-//    public String getNumber() {
-//        return number;
-//    }
-//    public byte[] getAvatarBytes () {
-//        return avatar;
-//    }
+    public long getId() { return id; }
+    public String getName() { return name; }
+    public String getLastname() { return lastname; }
+    public String getDate() { return date; }
+    public String getShort_info() { return short_info; }
+    public String getNumber() { return number; }
+    public byte[] getAvatarBytes() { return avatar; }
 }
 
